@@ -9,31 +9,32 @@ import keras.backend as K
 
 
 # Formats Position
-format_position = lambda price: ('-$' if price < 0 else '+$') + '{0:.2f}'.format(abs(price))
+def format_position(price): return (
+    '-$' if price < 0 else '+$') + f'{abs(price):.2f}'
 
 
 # Formats Currency
-format_currency = lambda price: '${0:.2f}'.format(abs(price))
+def format_currency(price): return f'${abs(price):.2f}'
 
 
 def show_train_result(result, val_position, initial_offset):
     """ Displays training results
     """
     if val_position == initial_offset or val_position == 0.0:
-        logging.info('Episode {}/{} - Train Position: {}  Val Position: USELESS  Train Loss: {:.4f}'
-                     .format(result[0], result[1], format_position(result[2]), result[3]))
+        logging.info(
+            f'Episode {result[0]}/{result[1]} - Train Position: {format_position(result[2])}  Val Position: USELESS  Train Loss: {result[3]:.4f}')
     else:
-        logging.info('Episode {}/{} - Train Position: {}  Val Position: {}  Train Loss: {:.4f})'
-                     .format(result[0], result[1], format_position(result[2]), format_position(val_position), result[3],))
+        logging.info(
+            f'Episode {result[0]}/{result[1]} - Train Position: {format_position(result[2])}  Val Position: {format_position(val_position)}  Train Loss: {result[3]:.4f})')
 
 
 def show_eval_result(model_name, profit, initial_offset):
     """ Displays eval results
     """
     if profit == initial_offset or profit == 0.0:
-        logging.info('{}: USELESS\n'.format(model_name))
+        logging.info(f'{model_name}: USELESS\n')
     else:
-        logging.info('{}: {}\n'.format(model_name, format_position(profit)))
+        logging.info(f'{model_name}: {format_position(profit)}\n')
 
 
 def get_stock_data(stock_file):

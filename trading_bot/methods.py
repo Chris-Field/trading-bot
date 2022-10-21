@@ -23,7 +23,7 @@ def train_model(agent, episode, data, ep_count=100, batch_size=32, window_size=1
 
     state = get_state(data, 0, window_size + 1)
 
-    for t in tqdm(range(data_length), total=data_length, leave=True, desc='Episode {}/{}'.format(episode, ep_count)):        
+    for t in tqdm(range(data_length), total=data_length, leave=True, desc=f'Episode {episode}/{ep_count}'):
         reward = 0
         next_state = get_state(data, t + 1, window_size + 1)
 
@@ -38,7 +38,7 @@ def train_model(agent, episode, data, ep_count=100, batch_size=32, window_size=1
         elif action == 2 and len(agent.inventory) > 0:
             bought_price = agent.inventory.pop(0)
             delta = data[t] - bought_price
-            reward = delta #max(delta, 0)
+            reward = delta  # max(delta, 0)
             total_profit += delta
 
         # HOLD
@@ -66,13 +66,13 @@ def evaluate_model(agent, data, window_size, debug):
 
     history = []
     agent.inventory = []
-    
+
     state = get_state(data, 0, window_size + 1)
 
-    for t in range(data_length):        
+    for t in range(data_length):
         reward = 0
         next_state = get_state(data, t + 1, window_size + 1)
-        
+
         # select an action
         action = agent.act(state, is_eval=True)
 
@@ -82,19 +82,19 @@ def evaluate_model(agent, data, window_size, debug):
 
             history.append((data[t], "BUY"))
             if debug:
-                logging.debug("Buy at: {}".format(format_currency(data[t])))
-        
+                logging.debug(f"Buy at: {format_currency(data[t])}")
+
         # SELL
         elif action == 2 and len(agent.inventory) > 0:
             bought_price = agent.inventory.pop(0)
             delta = data[t] - bought_price
-            reward = delta #max(delta, 0)
+            reward = delta  # max(delta, 0)
             total_profit += delta
 
             history.append((data[t], "SELL"))
             if debug:
-                logging.debug("Sell at: {} | Position: {}".format(
-                    format_currency(data[t]), format_position(data[t] - bought_price)))
+                logging.debug(
+                    f"Sell at: {format_currency(data[t])} | Position: {format_position(data[t] - bought_price)}")
         # HOLD
         else:
             history.append((data[t], "HOLD"))
