@@ -108,3 +108,6 @@ venv.bak/
 
 # poetry stuff
 poetry.lock
+
+# models
+/models
